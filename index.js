@@ -15,11 +15,15 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-const Task = mongoose.model("Task", {
+// Create a collection from a given model:
+// 1. Create a schema for the collection
+const taskSchema = new mongoose.Schema({
   label: String,
   isDone: Boolean,
   isArchived: Boolean,
 });
+// 2. Create a model upon the schema, named "Task", and assigne it to a variable "Task"
+const Task = mongoose.model("Task", taskSchema);
 
 app.get("/", async (req, res) => {
   setTimeout(async () => {
@@ -73,8 +77,8 @@ app.put("/", showReq, async (req, res) => {
   }
 });
 
-app.put("/delete", showReq, async (req, res) => {
-  const { id } = req.body;
+app.delete("/:id", showReq, async (req, res) => {
+  const { id } = req.params;
   try {
     const taskToDelete = await Task.findOneAndDelete({
       _id: id,
