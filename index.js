@@ -1,10 +1,10 @@
-require("dotenv").config();
+// require("dotenv").config();
 
 const cors = require("cors");
 
 // Mongoose
 const mongoose = require("mongoose");
-mongoose.connect(process.env.MONGODB_URI);
+mongoose.connect("mongodb://localhost:27017/todo-react-exercice");
 
 // Middleware
 const showReq = require("./middleware/showReq");
@@ -48,7 +48,7 @@ app.post("/", showReq, async (req, res) => {
 
     await newTask.save();
 
-    console.log("New task", newTask);
+    console.log("New task created", newTask);
 
     res.status(200).json({ message: "All good." });
   } catch (error) {
@@ -67,7 +67,7 @@ app.put("/", showReq, async (req, res) => {
     isDone !== undefined && (taskToUpdate.isDone = isDone);
     isArchived !== undefined && (taskToUpdate.isArchived = isArchived);
 
-    console.log("Updated task", taskToUpdate);
+    console.log("Task updated", taskToUpdate);
 
     await taskToUpdate.save();
 
@@ -84,6 +84,8 @@ app.delete("/:id", showReq, async (req, res) => {
       _id: id,
     });
 
+    console.log("Task deleted", taskToUpdate);
+
     res.status(200).json({ message: `task deleted.` });
   } catch (error) {
     res.status(500).json({ meessage: error.message });
@@ -92,16 +94,12 @@ app.delete("/:id", showReq, async (req, res) => {
 
 app.get("*", showReq, (req, res) => {
   try {
-    res
-      .status(404)
-      .sendFile(
-        "/Users/fmorri/Developpeur/Le-Reacteur/Backend/vinted/images/peugeot_404.jpg"
-      );
+    res.status(404);
   } catch (error) {
     return res.status(500).json({ message: error.message });
   }
 });
 
-app.listen(process.env.PORT, () => {
+app.listen(3000, () => {
   console.warn("🔶 Server «Vinted» started");
 });
